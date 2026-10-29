@@ -7,6 +7,7 @@ import StockBrain from './pages/StockBrain';
 import Money from './pages/Money';
 import AskBrain from './pages/AskBrain';
 import AddData from './pages/AddData';
+import Dashboard from './pages/Dashboard';
 
 // Retain previous views for backwards-compatible direct linking
 import Orders from './pages/Orders';
@@ -31,7 +32,9 @@ export default function App() {
             <Route path="/ask-brain" element={<AskBrain />} />
             <Route path="/add-data" element={<AddData />} />
 
-            {/* Backwards Compatibility Routes */}
+            {/* AI Order Desk & Operations */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/order-desk" element={<Navigate to="/dashboard" replace />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/activity" element={<Activity />} />

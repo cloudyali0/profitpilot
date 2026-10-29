@@ -6,8 +6,9 @@ from typing import Optional
 
 class Settings(BaseSettings):
     # AI Provider
-    ai_provider: str = "mock"
-    gemini_api_key: Optional[str] = None
+    ai_provider: str = "gemini"
+    gemini_api_key: Optional[str] = ""
+    gemini_model: str = "gemini-flash-latest"
     openai_api_key: Optional[str] = None
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "llama3"

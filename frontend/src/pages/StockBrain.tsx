@@ -69,6 +69,12 @@ export default function StockBrain() {
     setTimeout(() => setActionNotice(null), 4000);
   };
 
+  const openWhatsAppPO = (item: BrainInventoryItem) => {
+    const needed = Math.max(1, Math.ceil(item.daily_demand * 7 - item.stock));
+    const text = `Namaste Ji,\nKirana Decision Hub se urgent stock order:\n📦 Product: ${item.name}\n🔢 Quantity: ${needed} ${item.unit}\nKripya kal subah tak delivery karwayein.\nDhanyawad!`;
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
   const reorderCount = items.filter((i) => i.days_left !== null && i.days_left <= 5 && i.daily_demand > 0.5).length;
   const deadCount = items.filter((i) => i.days_since_last_sale >= 30 && i.stock > 0).length;
   const marginCount = items.filter((i) => i.margin_pct < 8 && i.qty_30d > 0).length;
@@ -315,15 +321,30 @@ export default function StockBrain() {
                       </td>
 
                       <td style={{ padding: '14px 16px', textAlign: 'right' }}>
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() => handleAction(item)}
-                          style={{ fontSize: '0.75rem', padding: '5px 10px', whiteSpace: 'nowrap' }}
-                        >
-                          {item.days_left !== null && item.days_left <= 5 ? '⚡ Reorder' :
-                           item.days_since_last_sale >= 30 ? '🏷️ Discount' :
-                           item.margin_pct < 8 ? '💹 Price +₹' : 'Details'}
-                        </button>
+                        <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end', alignItems: 'center' }}>
+                          {item.days_left !== null && item.days_left <= 5 && (
+                            <button
+                              className="btn"
+                              onClick={() => openWhatsAppPO(item)}
+                              style={{
+                                background: '#25D366', color: '#fff', fontSize: '0.72rem', padding: '4px 8px',
+                                borderRadius: 6, display: 'inline-flex', alignItems: 'center', gap: 3, fontWeight: 700, border: 'none', cursor: 'pointer'
+                              }}
+                              title="Order from distributor via WhatsApp"
+                            >
+                              <span>📲 WA</span>
+                            </button>
+                          )}
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => handleAction(item)}
+                            style={{ fontSize: '0.75rem', padding: '5px 10px', whiteSpace: 'nowrap' }}
+                          >
+                            {item.days_left !== null && item.days_left <= 5 ? '⚡ Reorder' :
+                             item.days_since_last_sale >= 30 ? '🏷️ Discount' :
+                             item.margin_pct < 8 ? '💹 Price +₹' : 'Details'}
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

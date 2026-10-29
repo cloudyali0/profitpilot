@@ -1,11 +1,18 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const navItems = [
+const brainNavItems = [
   { path: '/', label: 'Home (Overview)', icon: '🏪' },
   { path: '/stock-brain', label: 'Stock Brain', icon: '📦' },
   { path: '/money', label: 'Money & Anomaly', icon: '💰' },
   { path: '/ask-brain', label: 'Ask Brain (AI)', icon: '💬' },
   { path: '/add-data', label: 'Add Data & Sync', icon: '➕' },
+];
+
+const opsNavItems = [
+  { path: '/dashboard', label: 'AI Order Desk', icon: '⚡' },
+  { path: '/orders', label: 'Orders', icon: '📋' },
+  { path: '/customers', label: 'Customers', icon: '👥' },
+  { path: '/activity', label: 'Agent Activity', icon: '📜' },
 ];
 
 interface SidebarProps {
@@ -42,7 +49,27 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
 
         <nav className="sidebar-nav">
-          {navItems.map((item) => (
+          <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em', padding: '6px 12px 2px' }}>
+            Decision Engine
+          </div>
+          {brainNavItems.map((item) => (
+            <button
+              key={item.path}
+              className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+              onClick={() => {
+                navigate(item.path);
+                onClose();
+              }}
+            >
+              <span className="nav-icon">{item.icon}</span>
+              {item.label}
+            </button>
+          ))}
+
+          <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em', padding: '14px 12px 2px' }}>
+            Operations & Agent
+          </div>
+          {opsNavItems.map((item) => (
             <button
               key={item.path}
               className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}

@@ -125,11 +125,13 @@ class GeminiProvider(AIProvider):
 
     def __init__(self):
         try:
+            if not settings.gemini_api_key:
+                raise ValueError("GEMINI_API_KEY is not configured")
             from google import genai
             self.client = genai.Client(api_key=settings.gemini_api_key)
-            self.model_name = "gemini-2.0-flash"
+            self.model_name = settings.gemini_model or "gemini-flash-latest"
         except Exception as e:
-            logger.error(f"Failed to initialize Gemini: {e}")
+            logger.warning(f"Failed to initialize Gemini: {e}")
             raise
 
     async def parse_customer_request(self, message: str) -> dict:
@@ -219,13 +221,21 @@ class OpenAIProvider(AIProvider):
 
 
 def get_ai_provider() -> AIProvider:
-    """Factory function to get the configured AI provider."""
-    provider = settings.ai_provider.lower()
+    """Factory function to get the configured AI provider with safe fallbacks."""
+    provider = (settings.ai_provider or "mock").lower()
 
     if provider == "gemini":
-        return GeminiProvider()
+        try:
+            return GeminiProvider()
+        except Exception as e:
+            logger.warning(f"Could not use GeminiProvider ({e}), falling back to MockAIProvider")
+            return MockAIProvider()
     elif provider == "openai":
-        return OpenAIProvider()
+        try:
+            return OpenAIProvider()
+        except Exception as e:
+            logger.warning(f"Could not use OpenAIProvider ({e}), falling back to MockAIProvider")
+            return MockAIProvider()
     elif provider == "mock":
         return MockAIProvider()
     else:

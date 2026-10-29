@@ -20,18 +20,57 @@ EXP_MAP = {
 }
 
 
+SYNONYMS = {
+    "atta": ["atta", "aata", "gehu", "wheat", "flour", "aashirvaad"],
+    "oil": ["oil", "tel", "tail", "soya", "fortune"],
+    "salt": ["salt", "namak", "tata"],
+    "sugar": ["sugar", "cheeni", "chini", "shakkar"],
+    "dal": ["dal", "daal", "toor"],
+    "rice": ["rice", "chawal", "basmati"],
+    "tea": ["tea", "chai", "chaipatti"],
+    "maggi": ["maggi", "noodles"],
+    "butter": ["butter", "makkhan", "amul"],
+    "soap": ["soap", "sabun", "lux"],
+    "paste": ["colgate", "paste", "toothpaste", "dant"],
+    "surf": ["surf", "detergent", "powder", "excel"],
+    "bar": ["vim", "bartan", "bar"],
+    "water": ["bisleri", "pani", "water"],
+    "coke": ["coca", "coke", "colddrink", "thanda", "pepsi"],
+    "honey": ["honey", "shehad", "patanjali"],
+    "kurkure": ["kurkure", "namkeen", "chips"],
+    "bhujia": ["bhujia", "sev", "haldiram"],
+    "chyawanprash": ["chyawanprash", "dabur"],
+    "flakes": ["corn", "kellogg", "flakes"]
+}
+
+
+def _expand_tokens(tokens):
+    expanded = set(tokens)
+    for syn_key, words in SYNONYMS.items():
+        if any(w in tokens for w in words):
+            expanded.add(syn_key)
+            expanded.update(words)
+    return expanded
+
+
 def _match_product(text):
     p = db.read("select * from products")
     if len(p) == 0:
         return None
-    toks = set(re.findall(r"[a-z0-9']+", text.lower()))
+    raw_toks = set(re.findall(r"[a-z0-9']+", text.lower()))
+    toks = _expand_tokens(raw_toks)
     best, score = None, 0
     for _, r in p.iterrows():
-        nt = set(re.findall(r"[a-z0-9']+", r["name"].lower()))
+        p_name = r["name"].lower()
+        nt = _expand_tokens(set(re.findall(r"[a-z0-9']+", p_name)))
         sc = len(toks & nt)
+        # Substring bonus
+        for t in raw_toks:
+            if len(t) >= 3 and t in p_name:
+                sc += 2
         if sc > score:
             best, score = r, sc
-    return best
+    return best if score > 0 else None
 
 
 def process(text):
@@ -39,15 +78,16 @@ def process(text):
     nums = [float(x) for x in re.findall(r"\d+(?:\.\d+)?", t)]
     today = date.today().isoformat()
 
+    has_restock = any(w in t for w in RESTOCK)
+    has_sale = any(w in t for w in SALE)
+
     # 1. Product Restock or Sale
-    if any(w in t for w in RESTOCK) or any(w in t for w in SALE):
-        prod = _match_product(t)
-        if prod is None:
-            return {"ok": False, "message": "Product samajh nahi aaya. Kripya naam spasht likhein (jaise 'atta', 'maggi')."}
+    prod = _match_product(t)
+    if prod is not None and (has_restock or has_sale or nums):
         qty = int(nums[0]) if nums else 1
         pid = int(prod["id"])
 
-        if any(w in t for w in RESTOCK):
+        if has_restock:
             db.execute("UPDATE products SET stock = stock + ? WHERE id = ?", (qty, pid))
             return {
                 "ok": True,
@@ -55,17 +95,20 @@ def process(text):
                 "message": f"✅ {prod['name']} me {qty} {prod['unit']} stock add hua! (Naya stock: {int(prod['stock']) + qty})"
             }
 
-        # Sale
+        # Sale (either explicit 'becha' or implied by product + quantity)
+        curr_stock = int(prod["stock"])
+        new_stock = max(curr_stock - qty, 0)
         db.execute("INSERT INTO sales(date, product_id, qty) VALUES(?, ?, ?)", (today, pid, qty))
-        db.execute("UPDATE products SET stock = max(stock - ?, 0) WHERE id = ?", (qty, pid))
+        db.execute("UPDATE products SET stock = ? WHERE id = ?", (new_stock, pid))
         return {
             "ok": True,
             "type": "sale",
-            "message": f"✅ {qty} {prod['unit']} x {prod['name']} bika (₹{qty * prod['sp']:,.0f}). Stock update ho gaya."
+            "message": f"✅ {qty} {prod['unit']} x {prod['name']} bika (₹{qty * prod['sp']:,.0f}). Stock update ho gaya (Stock bacha: {new_stock})."
         }
 
-    # 2. Expense
-    if nums:
+    # 2. Expense (with numbers and category match, or explicit expense word)
+    has_expense = any(w in t for w in ("kharcha", "expense", "bill", "diya", "paid", "bhada", "kiraya", "salary", "bijli", "wastage"))
+    if nums and (has_expense or any(any(w in t for w in ws) for ws in EXP_MAP.values())):
         cat = next((k for k, ws in EXP_MAP.items() if any(w in t for w in ws)), "misc")
         amt = max(nums)
         db.execute("INSERT INTO expenses(date, category, amount, note) VALUES(?, ?, ?, ?)", (today, cat, amt, text))
@@ -77,5 +120,5 @@ def process(text):
 
     return {
         "ok": False,
-        "message": "Samajh nahi aaya. Example: '2 atta becha', 'bijli bill 1800 diya', '50 maggi aaya'."
+        "message": "Samajh nahi aaya. Example: '2 atta becha', 'bijli bill 1800 diya', '50 maggi aaya', 'auto 200'."
     }
