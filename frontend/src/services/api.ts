@@ -1,6 +1,6 @@
 // KiranaFlow AI - API Service Layer
 
-const API_BASE = '/api';
+const API_BASE = (((import.meta as any).env?.VITE_API_BASE_URL as string) || '/api').replace(/\/+$/, '');
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
