@@ -7,7 +7,7 @@ from typing import Optional
 class Settings(BaseSettings):
     # AI Provider
     ai_provider: str = "gemini"
-    gemini_api_key: Optional[str] = ""
+    gemini_api_key: Optional[str] = None
     gemini_model: str = "gemini-flash-latest"
     openai_api_key: Optional[str] = None
     ollama_base_url: str = "http://localhost:11434"
