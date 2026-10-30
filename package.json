@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "ProfitPilot - Retail Decision Engine for Small Businesses & Kirana Stores",
   "scripts": {
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
     "start": "cmd /c run.bat",
     "dev": "cmd /c run.bat"
   }
