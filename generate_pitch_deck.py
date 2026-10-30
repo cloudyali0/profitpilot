@@ -7,7 +7,7 @@ from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
 
-def create_deck(filename="Kirana_Flow_Small_Business_Brain_Pitch.pptx"):
+def create_deck(filename="ProfitPilot_Pitch_Deck.pptx"):
     prs = pptx.Presentation()
     prs.slide_width = Inches(13.333)
     prs.slide_height = Inches(7.5)
@@ -92,7 +92,7 @@ def create_deck(filename="Kirana_Flow_Small_Business_Brain_Pitch.pptx"):
     tf = tb_title.text_frame
     tf.word_wrap = True
     p = tf.paragraphs[0]
-    p.text = "Small Business Brain"
+    p.text = "ProfitPilot"
     p.font.size = Pt(46)
     p.font.bold = True
     p.font.color.rgb = C_TEXT_WHITE
@@ -219,7 +219,7 @@ def create_deck(filename="Kirana_Flow_Small_Business_Brain_Pitch.pptx"):
     # ─────────────────────────────────────────────────────────────
     s3 = prs.slides.add_slide(blank_layout)
     set_slide_bg(s3, C_BG_LIGHT)
-    add_header(s3, "The Solution", "Small Business Brain: The Decision Engine for Retail", "Transforming passive record-keeping into automated, high-confidence profit generation.")
+    add_header(s3, "The Solution", "ProfitPilot: The Retail Decision Engine", "Transforming passive record-keeping into automated, high-confidence profit generation.")
 
     sol_cards = [
         ("🎯 1. Daily Action Engine", "Roz Subah 3 Sahi Faisle",
@@ -465,7 +465,7 @@ def create_deck(filename="Kirana_Flow_Small_Business_Brain_Pitch.pptx"):
     # ─────────────────────────────────────────────────────────────
     s8 = prs.slides.add_slide(blank_layout)
     set_slide_bg(s8, C_BG_LIGHT)
-    add_header(s8, "Market Comparison", "How Small Business Brain Outperforms Existing Tools", "A leap forward from passive record-keeping to proactive decision intelligence.")
+    add_header(s8, "Market Comparison", "How ProfitPilot Outperforms Existing Tools", "A leap forward from passive record-keeping to proactive decision intelligence.")
 
     # Table
     rows = 6
@@ -482,7 +482,7 @@ def create_deck(filename="Kirana_Flow_Small_Business_Brain_Pitch.pptx"):
     tbl.columns[2].width = Inches(3.0)
     tbl.columns[3].width = Inches(3.333)
 
-    headers = ["Feature Dimension", "Khatabook / Vyapar", "Generic GenAI Tools", "Small Business Brain"]
+    headers = ["Feature Dimension", "Khatabook / Vyapar", "Generic GenAI Tools", "ProfitPilot"]
     for j, h in enumerate(headers):
         cell = tbl.cell(0, j)
         cell.fill.solid()
@@ -645,7 +645,7 @@ def create_deck(filename="Kirana_Flow_Small_Business_Brain_Pitch.pptx"):
     tf.margin_top = Inches(0.5)
 
     p = tf.paragraphs[0]
-    p.text = "Small Business Brain"
+    p.text = "ProfitPilot"
     p.font.size = Pt(40)
     p.font.bold = True
     p.font.color.rgb = C_TEXT_WHITE

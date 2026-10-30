@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 # Create FastAPI app
 app = FastAPI(
-    title="Small Business Brain",
+    title="ProfitPilot",
     description="Intelligent Decision Engine & Retail Analytics for Kirana and Small Businesses",
     version="1.0.0",
 )
@@ -67,14 +67,14 @@ def startup():
         logger.warning(f"Error checking brain database: {e}. Seeding fresh...")
         brain_seed.build()
 
-    logger.info(f"Small Business Brain ready. AI Provider: {settings.ai_provider}")
+    logger.info(f"ProfitPilot ready. AI Provider: {settings.ai_provider}")
 
 
 @app.get("/api/health")
 def health_check():
     return {
         "status": "online",
-        "platform": "Small Business Brain",
+        "platform": "ProfitPilot",
         "store": settings.store_name,
         "ai_provider": settings.ai_provider,
         "version": "1.0.0",

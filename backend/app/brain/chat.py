@@ -14,7 +14,7 @@ def _rule_based(q, o, recs):
     # Greeting
     if any(t == g or t.startswith(g + " ") for g in ("hi", "hello", "namaste", "pranam", "hey")):
         return (
-            "🙏 Namaste! Main Small Business Brain hoon.\n"
+            "🙏 Namaste! Main ProfitPilot hoon.\n"
             "Aap mujhse pooch sakte hain:\n"
             "• 'Is hafte kya mangau?'\n"
             "• 'Atta ka stock kab khatam hoga?'\n"
@@ -90,7 +90,7 @@ def ask(q):
     }, ensure_ascii=False)
 
     prompt = (
-        "Tum 'Small Business Brain' ho - ek smart retail advisor for kirana stores. "
+        "Tum 'ProfitPilot' ho - ek smart retail advisor for kirana stores. "
         "SIRF diye gaye data ke actual numbers use karo, koi bhi man-ghadant number mat banao. "
         "Hinglish me chhota, clear aur actionable jawab do. Rupees (₹) me impact zaroor batao.\n\n"
         f"DATA: {ctx}\n\n"

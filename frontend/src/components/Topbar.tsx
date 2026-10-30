@@ -7,7 +7,7 @@ interface TopbarProps {
 
 export default function Topbar({ onToggleSidebar }: TopbarProps) {
   const [online, setOnline] = useState(false);
-  const [storeName, setStoreName] = useState('Kirana Decision Hub');
+  const [storeName, setStoreName] = useState('ProfitPilot Hub');
 
   useEffect(() => {
     healthCheck()

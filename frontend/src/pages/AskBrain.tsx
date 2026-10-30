@@ -23,7 +23,7 @@ export default function AskBrain() {
     {
       id: 'init-1',
       sender: 'brain',
-      text: 'Namaste! Main **Small Business Brain** hoon. Aapki dukaan ke stock, munafa aur kharche par seedha jawab de sakta hoon. \n\nNeeche diye gaye sawal poochhein ya mic daba kar bolein:',
+      text: 'Namaste! Main **ProfitPilot** hoon. Aapki dukaan ke stock, munafa aur kharche par seedha jawab de sakta hoon. \n\nNeeche diye gaye sawal poochhein ya mic daba kar bolein:',
       source: 'engine',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },

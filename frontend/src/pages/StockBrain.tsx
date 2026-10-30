@@ -71,7 +71,7 @@ export default function StockBrain() {
 
   const openWhatsAppPO = (item: BrainInventoryItem) => {
     const needed = Math.max(1, Math.ceil(item.daily_demand * 7 - item.stock));
-    const text = `Namaste Ji,\nKirana Decision Hub se urgent stock order:\n📦 Product: ${item.name}\n🔢 Quantity: ${needed} ${item.unit}\nKripya kal subah tak delivery karwayein.\nDhanyawad!`;
+    const text = `Namaste Ji,\nProfitPilot Hub se urgent stock order:\n📦 Product: ${item.name}\n🔢 Quantity: ${needed} ${item.unit}\nKripya kal subah tak delivery karwayein.\nDhanyawad!`;
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
   };
 

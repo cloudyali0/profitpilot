@@ -1,4 +1,4 @@
-# Small Business Brain
+# ProfitPilot (Small Business Brain)
 
 ### *Roz subah 3 sahi faisle, seedha munafa.*
 
@@ -9,13 +9,13 @@
 [![License](https://img.shields.io/badge/License-MIT-gray)](LICENSE)
 
 > India has millions of kirana stores and small retailers. Most store owners manage inventory and daily financial decisions purely on memory and intuition. Fast-moving items run out causing lost sales, slow-moving items freeze valuable working capital, and variable expense leaks go unnoticed.  
-> **Small Business Brain is the intelligence engine for retail:** Every morning, it delivers exactly 3 prioritized, high-impact business decisions with transparent Rupee (₹) impacts calculated deterministically with pandas.
+> **ProfitPilot is the intelligence engine for retail:** Every morning, it delivers exactly 3 prioritized, high-impact business decisions with transparent Rupee (₹) impacts calculated deterministically with pandas.
 
 ---
 
 ## Key Differentiators
 
-| Traditional Retail / Ledger Apps | Small Business Brain |
+| Traditional Retail / Ledger Apps | ProfitPilot |
 | --- | --- |
 | Record-keeping only (Khatabook/Vyapar style) | **Decision Engine:** Tells the merchant *what to do today* with quantified ₹ impact. |
 | Black-box ML or LLM-hallucinated figures | **Deterministic pandas/numpy math:** Every number is calculated directly from ledger transactions. |

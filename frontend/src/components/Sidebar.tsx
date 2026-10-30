@@ -42,8 +42,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
           <h1>
-            <span className="brand-icon">🧠</span>
-            Small Business Brain
+            <span className="brand-icon">🚀</span>
+            ProfitPilot
           </h1>
           <div className="tagline">Roz subah 3 sahi faisle, seedha munafa.</div>
         </div>
@@ -86,10 +86,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         <div className="sidebar-footer">
           <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-            Decision Intelligence Platform
+            Retail Decision Intelligence
           </div>
           <div style={{ fontSize: '0.68rem', color: 'var(--text-tertiary)', marginTop: '2px' }}>
-            Small Business Brain v1.0
+            ProfitPilot Platform v1.0
           </div>
         </div>
       </aside>

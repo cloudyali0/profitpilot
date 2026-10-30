@@ -1,7 +1,7 @@
 @echo off
-title Kirana Flow - Small Business Brain Launcher
+title ProfitPilot - Retail Decision Engine Launcher
 echo ========================================================
-echo   Starting Small Business Brain (Backend + Frontend)
+echo   Starting ProfitPilot (Backend + Frontend)
 echo ========================================================
 
 :: Determine paths
@@ -22,9 +22,9 @@ if %errorlevel% equ 0 (
 ) else (
     echo [1/3] Starting Backend Server on http://localhost:8000 ...
     if exist "%BACKEND_DIR%\.venv\Scripts\python.exe" (
-        start "Backend - Small Business Brain" cmd /k "cd /d \"%BACKEND_DIR%\" && .venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000 --host 0.0.0.0"
+        start "Backend - ProfitPilot" cmd /k "cd /d \"%BACKEND_DIR%\" && .venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000 --host 0.0.0.0"
     ) else (
-        start "Backend - Small Business Brain" cmd /k "cd /d \"%BACKEND_DIR%\" && py -m uvicorn app.main:app --reload --port 8000 --host 0.0.0.0"
+        start "Backend - ProfitPilot" cmd /k "cd /d \"%BACKEND_DIR%\" && py -m uvicorn app.main:app --reload --port 8000 --host 0.0.0.0"
     )
     timeout /t 3 /nobreak >nul
 )
@@ -35,7 +35,7 @@ if %errorlevel% equ 0 (
     echo [Frontend] Server already running on http://localhost:5173
 ) else (
     echo [2/3] Starting Frontend Server on http://localhost:5173 ...
-    start "Frontend - Small Business Brain" cmd /k "cd /d \"%FRONTEND_DIR%\" && npm run dev -- --host 0.0.0.0"
+    start "Frontend - ProfitPilot" cmd /k "cd /d \"%FRONTEND_DIR%\" && npm run dev -- --host 0.0.0.0"
     timeout /t 3 /nobreak >nul
 )
 

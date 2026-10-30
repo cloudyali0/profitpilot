@@ -57,7 +57,7 @@ export default function Home() {
   };
 
   const sendWhatsAppPO = (title: string, detail: string) => {
-    const text = `Namaste Ji,\nKirana Decision Hub se urgent stock order:\n📦 ${title}\n📝 Note: ${detail}\nKripya kal subah tak delivery karwayein.\nDhanyawad!`;
+    const text = `Namaste Ji,\nProfitPilot Hub se urgent stock order:\n📦 ${title}\n📝 Note: ${detail}\nKripya kal subah tak delivery karwayein.\nDhanyawad!`;
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -109,13 +109,13 @@ export default function Home() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-              🏪 Small Business Brain
+              🚀 ProfitPilot
             </h1>
             <span style={{
               background: 'var(--brand-100)', color: 'var(--brand-700)',
               fontSize: '0.72rem', fontWeight: 700, padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.05em'
             }}>
-              Live Decision Engine
+              Retail Decision Engine
             </span>
           </div>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: 4 }}>
@@ -339,14 +339,14 @@ export default function Home() {
 
       </div>
 
-      {/* 🧠 Problem Statement Showcase: Intuition vs Small Business Brain */}
+      {/* 🧠 Problem Statement Showcase: Intuition vs ProfitPilot */}
       <div className="card" style={{ padding: 22, marginBottom: 24, border: '2px solid #E2E8F0', background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: '1.25rem' }}>⚖️</span>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-                Intuition (Dukandar Ka Andaza) vs Small Business Brain (Data Analytics)
+                Intuition (Dukandar Ka Andaza) vs ProfitPilot (Data Analytics)
               </h3>
             </div>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: 4 }}>
@@ -394,14 +394,14 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right: Small Business Brain */}
+          {/* Right: ProfitPilot */}
           <div style={{
             background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 12, padding: 16
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
               <span style={{ fontSize: '1.05rem' }}>✅</span>
               <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#166534', margin: 0 }}>
-                Small Business Brain (Deterministic Analytics)
+                ProfitPilot (Deterministic Analytics)
               </h4>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: '0.8rem', color: '#14532D' }}>

@@ -1,0 +1,9 @@
+{
+  "name": "profitpilot",
+  "version": "1.0.0",
+  "description": "ProfitPilot - Retail Decision Engine for Small Businesses & Kirana Stores",
+  "scripts": {
+    "start": "cmd /c run.bat",
+    "dev": "cmd /c run.bat"
+  }
+}

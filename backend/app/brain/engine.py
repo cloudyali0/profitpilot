@@ -266,7 +266,7 @@ def hinglish_summary():
     o = overview()
     recs = recommendations()
     lines = [
-        f"🏪 Small Business Brain — {o['as_of']}",
+        f"🚀 ProfitPilot — {o['as_of']}",
         f"Health Score: {o['health_score']}/100",
         f"Kal ki bikri ₹{o['last_day_sales']:,} | 30 din ka net profit ₹{o['net_profit_30d']:,}",
         "",

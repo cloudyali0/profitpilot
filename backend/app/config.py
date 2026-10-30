@@ -1,4 +1,4 @@
-"""Small Business Brain - Application Configuration"""
+"""ProfitPilot - Application Configuration"""
 
 from pydantic_settings import BaseSettings
 from typing import Optional
@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:5173,http://localhost:3000"
 
     # Store
-    store_name: str = "Kirana Decision Hub"
+    store_name: str = "ProfitPilot Hub"
     default_delivery_fee: float = 30.0
     currency_symbol: str = "₹"
 
@@ -30,5 +30,9 @@ class Settings(BaseSettings):
         env_file = ("../.env", ".env")
         env_file_encoding = "utf-8"
 
+
+import os
+if os.environ.get("STORE_NAME") in ("Kirana Decision Hub", None):
+    os.environ["STORE_NAME"] = "ProfitPilot Hub"
 
 settings = Settings()
