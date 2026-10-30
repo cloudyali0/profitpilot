@@ -1,4 +1,4 @@
-// KiranaFlow AI - Agent Activity Page
+// ProfitPilot AI - Agent Activity Page
 
 import { useState, useEffect } from 'react';
 import { getAgentEvents } from '../services/api';

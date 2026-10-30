@@ -1,4 +1,4 @@
-// KiranaFlow AI - API Service Layer
+// ProfitPilot AI - API Service Layer
 
 const API_BASE = (((import.meta as any).env?.VITE_API_BASE_URL as string) || '/api').replace(/\/+$/, '');
 

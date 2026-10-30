@@ -1,4 +1,4 @@
-"""KiranaFlow AI - AI Provider Abstraction
+"""ProfitPilot AI - AI Provider Abstraction
 
 Configurable AI provider that can be swapped via environment variables.
 Supports: Gemini, OpenAI, Ollama, and a built-in Mock provider.

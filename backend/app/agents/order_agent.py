@@ -1,4 +1,4 @@
-"""KiranaFlow AI - Autonomous Order Agent Pipeline
+"""ProfitPilot AI - Autonomous Order Agent Pipeline
 
 This is the core autonomous agent that orchestrates the complete order workflow:
   REQUEST → UNDERSTAND → RETRIEVE → DECIDE → ACT → UPDATE → CONFIRM

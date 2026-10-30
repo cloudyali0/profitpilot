@@ -1,4 +1,4 @@
-"""KiranaFlow AI - Database Models (SQLAlchemy ORM)"""
+"""ProfitPilot AI - Database Models (SQLAlchemy ORM)"""
 
 from sqlalchemy import (
     Column, Integer, String, Float, Text, DateTime, ForeignKey, Boolean, JSON,

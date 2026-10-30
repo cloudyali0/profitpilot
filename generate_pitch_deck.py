@@ -147,7 +147,7 @@ def create_deck(filename="ProfitPilot_Pitch_Deck.pptx"):
     # Footer
     tb_f = s1.shapes.add_textbox(Inches(0.8), Inches(6.7), Inches(11.5), Inches(0.4))
     p = tb_f.text_frame.paragraphs[0]
-    p.text = "KiranaFlow AI Architecture | Powered by FastAPI, React 19, Pandas & Google Gemini"
+    p.text = "ProfitPilot AI Architecture | Powered by FastAPI, React 19, Pandas & Google Gemini"
     p.font.size = Pt(11)
     p.font.color.rgb = RGBColor(100, 116, 139)
 
@@ -682,5 +682,5 @@ def create_deck(filename="ProfitPilot_Pitch_Deck.pptx"):
     print(f"Presentation successfully saved to {filename}")
 
 if __name__ == "__main__":
-    out_file = sys.argv[1] if len(sys.argv) > 1 else "Kirana_Flow_Small_Business_Brain_Pitch.pptx"
+    out_file = sys.argv[1] if len(sys.argv) > 1 else "ProfitPilot_Pitch_Deck.pptx"
     create_deck(out_file)

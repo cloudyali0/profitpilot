@@ -1,1 +1,1 @@
-"""KiranaFlow AI - Agent Package"""
+"""ProfitPilot AI - Agent Package"""

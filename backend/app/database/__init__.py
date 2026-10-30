@@ -1,4 +1,4 @@
-"""KiranaFlow AI - Database Connection and Session Management"""
+"""ProfitPilot AI - Database Connection and Session Management"""
 
 from sqlalchemy import create_engine, event, text
 from sqlalchemy.orm import sessionmaker, Session

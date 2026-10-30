@@ -1,1 +1,1 @@
-"""KiranaFlow AI - AI Service Package"""
+"""ProfitPilot AI - AI Service Package"""

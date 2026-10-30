@@ -1,1 +1,1 @@
-"""KiranaFlow AI - Backend Application Package"""
+"""ProfitPilot AI - Backend Application Package"""

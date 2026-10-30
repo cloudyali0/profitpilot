@@ -1,4 +1,4 @@
-// KiranaFlow AI - TypeScript Type Definitions
+// ProfitPilot AI - TypeScript Type Definitions
 
 export interface Product {
   id: number;

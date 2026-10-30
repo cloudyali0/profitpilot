@@ -1,4 +1,4 @@
-"""KiranaFlow AI - Order and Inventory Tools
+"""ProfitPilot AI - Order and Inventory Tools
 
 Server-validated tools for creating orders and managing inventory.
 """
@@ -260,8 +260,8 @@ def send_confirmation(order_data: dict, items: list, delivery: bool = False) -> 
 def _build_bill_text(order: Order, item_details: list) -> str:
     lines = [
         "────────────────────────────────",
-        "     🏪 KIRANAFLOW AI — BILL",
-        f"     Order: KF-{1000 + order.id}",
+        "     🏪 PROFITPILOT AI — BILL",
+        f"     Order: PP-{1000 + order.id}",
         "────────────────────────────────",
     ]
     for it in item_details:

@@ -1,4 +1,4 @@
-// KiranaFlow AI - Enhanced Customers Page
+// ProfitPilot AI - Enhanced Customers Page
 // Shows full customer profiles with purchase history and detailed order breakdown
 
 import { useState, useEffect } from 'react';

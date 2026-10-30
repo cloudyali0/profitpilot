@@ -1,4 +1,4 @@
-"""KiranaFlow AI - Product Tools
+"""ProfitPilot AI - Product Tools
 
 Server-side validated tools for product search and resolution.
 The AI agent calls these tools; they execute against the real database.

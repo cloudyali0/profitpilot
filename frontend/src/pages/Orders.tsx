@@ -1,4 +1,4 @@
-// KiranaFlow AI - Orders Page
+// ProfitPilot AI - Orders Page
 
 import { useState, useEffect } from 'react';
 import { getOrders, getOrderDetail } from '../services/api';

@@ -1,4 +1,4 @@
-"""KiranaFlow AI - Products API Routes"""
+"""ProfitPilot AI - Products API Routes"""
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session

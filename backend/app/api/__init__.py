@@ -1,1 +1,1 @@
-"""KiranaFlow AI - API Package"""
+"""ProfitPilot AI - API Package"""

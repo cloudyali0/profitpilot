@@ -1,4 +1,4 @@
-"""KiranaFlow AI - Delivery API Routes"""
+"""ProfitPilot AI - Delivery API Routes"""
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session

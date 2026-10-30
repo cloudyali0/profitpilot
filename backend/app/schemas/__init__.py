@@ -1,4 +1,4 @@
-"""KiranaFlow AI - Pydantic Request/Response Schemas"""
+"""ProfitPilot AI - Pydantic Request/Response Schemas"""
 
 from pydantic import BaseModel, Field
 from typing import List, Optional

@@ -1,4 +1,4 @@
-"""KiranaFlow AI - Database Seed Data
+"""ProfitPilot AI - Database Seed Data
 
 Neighborhood kirana catalog + customer base + historical orders.
 Seed is additive: existing rows are kept, missing products/customers are inserted.

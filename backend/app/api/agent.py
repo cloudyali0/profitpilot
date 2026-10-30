@@ -1,4 +1,4 @@
-"""KiranaFlow AI - Agent API Routes
+"""ProfitPilot AI - Agent API Routes
 
 Primary endpoint for the autonomous order pipeline.
 """

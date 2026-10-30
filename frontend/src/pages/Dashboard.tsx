@@ -1,4 +1,4 @@
-// KiranaFlow AI - Dashboard (Overview) Page
+// ProfitPilot AI - Dashboard (Overview) Page
 // Premium UI with interactive stat cards, voice input, and autonomous pipeline visualization
 
 import { useState, useEffect, useRef } from 'react';
@@ -255,7 +255,7 @@ export default function Dashboard() {
         <div>
           <h1>Operations Center</h1>
           <p className="page-subtitle">
-            Boliye kya chahiye, baaki KiranaFlow sambhale.
+            Boliye kya chahiye, baaki ProfitPilot sambhale.
           </p>
         </div>
         <div className="header-badges">
@@ -355,7 +355,7 @@ export default function Dashboard() {
           <div>
             <h2>Live Operation</h2>
             <p style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', margin: 0 }}>
-              Request in, order out — KiranaFlow handles the rest.
+              Request in, order out — ProfitPilot handles the rest.
             </p>
           </div>
           {processing && (
@@ -740,7 +740,7 @@ export default function Dashboard() {
             <div className="empty-icon-large">🏪</div>
             <h3>Ready to process orders</h3>
             <p>Type a request above, or tap a quick prompt.</p>
-            <p className="empty-tagline">"Boliye kya chahiye, baaki KiranaFlow sambhale."</p>
+            <p className="empty-tagline">"Boliye kya chahiye, baaki ProfitPilot sambhale."</p>
             <div className="pipeline-flow">
               {['Request', 'Understand', 'Retrieve', 'Decide', 'Act', 'Update', 'Confirm'].map((step, i) => (
                 <span key={i} className="flow-step">
