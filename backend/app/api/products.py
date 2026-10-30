@@ -1,6 +1,6 @@
 """ProfitPilot AI - Products API Routes"""
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
@@ -56,6 +56,51 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
     """Get a single product by ID."""
     product = db.query(Product).filter(Product.id == product_id).first()
     if not product:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Product not found")
     return product
+
+
+@router.put("/{product_id}")
+def update_product(product_id: int, updates: dict, db: Session = Depends(get_db)):
+    """Update product details or stock quantity."""
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    for k, v in updates.items():
+        if hasattr(product, k) and v is not None:
+            setattr(product, k, v)
+    db.commit()
+    db.refresh(product)
+    return {"status": "updated", "product_id": product.id}
+
+
+@router.delete("/{product_id}")
+def delete_product(product_id: int, db: Session = Depends(get_db)):
+    """Delete or deactivate a product from store."""
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    product.is_active = False
+    db.commit()
+    return {"status": "deleted", "product_id": product_id}
+
+
+@router.post("")
+def create_product(data: dict, db: Session = Depends(get_db)):
+    """Create a new product in store inventory."""
+    p = Product(
+        name=data.get("name", "New Product"),
+        category=data.get("category", "General"),
+        brand=data.get("brand", ""),
+        unit=data.get("unit", "pcs"),
+        price=float(data.get("price") or data.get("sp") or 0.0),
+        cost_price=float(data.get("cost_price") or data.get("cp") or 0.0),
+        stock=int(data.get("stock", 0)),
+        low_stock_threshold=int(data.get("low_stock_threshold", 10)),
+        description=data.get("description", ""),
+        is_active=True,
+    )
+    db.add(p)
+    db.commit()
+    db.refresh(p)
+    return {"status": "created", "product_id": p.id}

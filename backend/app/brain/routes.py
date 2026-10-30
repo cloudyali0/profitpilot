@@ -2,6 +2,7 @@ import math
 import io
 import pandas as pd
 from fastapi import APIRouter, UploadFile, File, HTTPException
+from typing import Optional
 from pydantic import BaseModel
 from . import db, seed, engine, chat, quick_entry
 
@@ -10,6 +11,15 @@ router = APIRouter(tags=["Small Business Brain"])
 
 class TextPayload(BaseModel):
     text: str
+
+
+class ProductPayload(BaseModel):
+    name: Optional[str] = None
+    category: Optional[str] = None
+    unit: Optional[str] = None
+    stock: Optional[int] = None
+    cp: Optional[float] = None
+    sp: Optional[float] = None
 
 
 def sanitize_floats(obj):
@@ -42,6 +52,34 @@ def get_inventory():
     ins, _ = engine.stock_insights()
     records = ins.to_dict("records")
     return sanitize_floats(records)
+
+
+@router.put("/inventory/{product_id}")
+def update_inventory_product(product_id: int, body: ProductPayload):
+    """Update product details or stock quantity in inventory."""
+    updates = {k: v for k, v in body.dict().items() if v is not None}
+    if updates:
+        set_clause = ", ".join(f"{k} = ?" for k in updates)
+        values = list(updates.values()) + [product_id]
+        db.execute(f"UPDATE products SET {set_clause} WHERE id = ?", tuple(values))
+    return {"status": "updated", "product_id": product_id}
+
+
+@router.delete("/inventory/{product_id}")
+def delete_inventory_product(product_id: int):
+    """Delete a product from store inventory."""
+    db.execute("DELETE FROM products WHERE id = ?", (product_id,))
+    return {"status": "deleted", "product_id": product_id}
+
+
+@router.post("/inventory")
+def create_inventory_product(body: ProductPayload):
+    """Add a new product to store inventory."""
+    pid = db.execute(
+        "INSERT INTO products (name, category, unit, cp, sp, stock) VALUES (?, ?, ?, ?, ?, ?)",
+        (body.name or "New Product", body.category or "General", body.unit or "pcs", body.cp or 0.0, body.sp or 0.0, body.stock or 0)
+    )
+    return {"status": "created", "product_id": pid}
 
 
 @router.get("/finance")

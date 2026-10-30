@@ -19,6 +19,9 @@ import {
   mockSubmitQuickEntry,
   getDataMode,
   setDataMode,
+  updateMockProduct,
+  deleteMockProduct,
+  addMockProduct,
 } from './mockData';
 
 export { getDataMode, setDataMode };
@@ -420,4 +423,38 @@ export async function uploadBrainCSV(kind: 'products' | 'sales' | 'expenses', fi
     rows_imported: Math.max(12, Math.floor(file.size / 60)),
     message: `✅ ${file.name} successfully parsed & imported into ProfitPilot!`,
   };
+}
+
+// ── Product CRUD (Edit, Delete, Add Stock) ──
+
+export async function updateProduct(id: number, updates: Partial<import('../types').BrainInventoryItem>) {
+  return safeRequest(
+    `/inventory/${id}`,
+    () => updateMockProduct(id, updates),
+    {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    }
+  );
+}
+
+export async function deleteProduct(id: number) {
+  return safeRequest(
+    `/inventory/${id}`,
+    () => deleteMockProduct(id),
+    {
+      method: 'DELETE',
+    }
+  );
+}
+
+export async function addProduct(product: Partial<import('../types').BrainInventoryItem>) {
+  return safeRequest(
+    '/inventory',
+    () => addMockProduct(product),
+    {
+      method: 'POST',
+      body: JSON.stringify(product),
+    }
+  );
 }

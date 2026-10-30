@@ -400,31 +400,7 @@ export function getMockRecommendations(): BrainRecommendation[] {
   ];
 }
 
-export function getMockInventory(): BrainInventoryItem[] {
-  const mode = getDataMode();
-
-  if (mode === 'empty') {
-    return MOCK_PRODUCTS.slice(0, 6).map((p) => ({
-      product_id: p.id,
-      name: p.name,
-      category: p.category,
-      unit: p.unit,
-      cp: p.cost_price || p.price * 0.85,
-      sp: p.price,
-      stock: 50,
-      daily_demand: 0,
-      forecast_7d: 0,
-      days_left: 99.0,
-      days_since_last_sale: 0,
-      qty_30d: 0,
-      revenue_30d: 0,
-      profit_30d: 0,
-      margin_pct: 15.0,
-      locked_cash: 50 * (p.cost_price || p.price * 0.85),
-    }));
-  }
-
-  return [
+const DEFAULT_INVENTORY: BrainInventoryItem[] = [
     {
       product_id: 42,
       name: 'Aashirvaad Shudh Chakki Atta 5kg',
@@ -642,6 +618,105 @@ export function getMockInventory(): BrainInventoryItem[] {
       locked_cash: 900.0,
     },
   ];
+
+export function getMockInventory(): BrainInventoryItem[] {
+  const mode = getDataMode();
+
+  if (mode === 'empty') {
+    const customEmpty = localStorage.getItem('profitpilot_inventory_empty');
+    if (customEmpty) {
+      try { return JSON.parse(customEmpty); } catch {}
+    }
+    return MOCK_PRODUCTS.slice(0, 6).map((p) => ({
+      product_id: p.id,
+      name: p.name,
+      category: p.category,
+      unit: p.unit,
+      cp: p.cost_price || p.price * 0.85,
+      sp: p.price,
+      stock: 50,
+      daily_demand: 0,
+      forecast_7d: 0,
+      days_left: 99.0,
+      days_since_last_sale: 0,
+      qty_30d: 0,
+      revenue_30d: 0,
+      profit_30d: 0,
+      margin_pct: 15.0,
+      locked_cash: 50 * (p.cost_price || p.price * 0.85),
+    }));
+  }
+
+  const stored = localStorage.getItem('profitpilot_inventory_items');
+  if (stored) {
+    try { return JSON.parse(stored); } catch {}
+  }
+  return DEFAULT_INVENTORY;
+}
+
+export function updateMockProduct(id: number, updates: Partial<BrainInventoryItem>) {
+  const mode = getDataMode();
+  const key = mode === 'empty' ? 'profitpilot_inventory_empty' : 'profitpilot_inventory_items';
+  const list = getMockInventory().map((item) => {
+    if (item.product_id === id) {
+      const updated = { ...item, ...updates };
+      if (updates.stock !== undefined) {
+        updated.stock = Math.max(0, updates.stock);
+        updated.locked_cash = updated.stock * updated.cp;
+        updated.days_left = updated.daily_demand > 0 ? Math.round((updated.stock / updated.daily_demand) * 10) / 10 : null;
+      }
+      if (updates.sp !== undefined || updates.cp !== undefined) {
+        updated.margin_pct = updated.sp > 0 ? Math.round(((updated.sp - updated.cp) / updated.sp) * 1000) / 10 : 0;
+      }
+      return updated;
+    }
+    return item;
+  });
+
+  localStorage.setItem(key, JSON.stringify(list));
+  window.dispatchEvent(new CustomEvent('profitpilot-data-changed'));
+  return { status: 'updated', product_id: id };
+}
+
+export function deleteMockProduct(id: number) {
+  const mode = getDataMode();
+  const key = mode === 'empty' ? 'profitpilot_inventory_empty' : 'profitpilot_inventory_items';
+  const list = getMockInventory().filter((item) => item.product_id !== id);
+  localStorage.setItem(key, JSON.stringify(list));
+  window.dispatchEvent(new CustomEvent('profitpilot-data-changed'));
+  return { status: 'deleted', product_id: id };
+}
+
+export function addMockProduct(data: Partial<BrainInventoryItem>) {
+  const mode = getDataMode();
+  const key = mode === 'empty' ? 'profitpilot_inventory_empty' : 'profitpilot_inventory_items';
+  const newId = Math.floor(1000 + Math.random() * 9000);
+  const cp = data.cp || 0;
+  const sp = data.sp || 0;
+  const stock = data.stock || 0;
+  const newItem: BrainInventoryItem = {
+    product_id: newId,
+    name: data.name || 'New Product',
+    category: data.category || 'General',
+    unit: data.unit || 'pcs',
+    cp,
+    sp,
+    stock,
+    daily_demand: data.daily_demand || 1.0,
+    forecast_7d: Math.round((data.daily_demand || 1.0) * 7),
+    days_left: stock > 0 ? Math.round((stock / (data.daily_demand || 1.0)) * 10) / 10 : 0,
+    days_since_last_sale: 0,
+    qty_30d: 0,
+    revenue_30d: 0,
+    profit_30d: 0,
+    margin_pct: sp > 0 ? Math.round(((sp - cp) / sp) * 1000) / 10 : 0,
+    locked_cash: stock * cp,
+  };
+
+  const list = [newItem, ...getMockInventory()];
+  localStorage.setItem(key, JSON.stringify(list));
+  window.dispatchEvent(new CustomEvent('profitpilot-data-changed'));
+  return { status: 'created', product_id: newId };
 }
 
 export function getMockFinance(): BrainFinance {
