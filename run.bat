@@ -6,7 +6,11 @@ echo ========================================================
 
 :: Determine paths
 set "BASE_DIR=%~dp0"
-if exist "%BASE_DIR%Kirana-Flow-main\backend" (
+if exist "%BASE_DIR%backend" (
+    set "PROJECT_DIR=%BASE_DIR%"
+) else if exist "%BASE_DIR%ProfitPilot\backend" (
+    set "PROJECT_DIR=%BASE_DIR%ProfitPilot"
+) else if exist "%BASE_DIR%Kirana-Flow-main\backend" (
     set "PROJECT_DIR=%BASE_DIR%Kirana-Flow-main"
 ) else (
     set "PROJECT_DIR=%BASE_DIR%"

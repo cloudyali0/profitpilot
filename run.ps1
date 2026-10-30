@@ -1,5 +1,9 @@
 $baseDir = $PSScriptRoot
-if (Test-Path "$baseDir\Kirana-Flow-main\backend") {
+if (Test-Path "$baseDir\backend") {
+    $projectDir = $baseDir
+} elseif (Test-Path "$baseDir\ProfitPilot\backend") {
+    $projectDir = "$baseDir\ProfitPilot"
+} elseif (Test-Path "$baseDir\Kirana-Flow-main\backend") {
     $projectDir = "$baseDir\Kirana-Flow-main"
 } else {
     $projectDir = $baseDir
