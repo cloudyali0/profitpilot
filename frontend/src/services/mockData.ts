@@ -1,5 +1,5 @@
 // ProfitPilot - Comprehensive Client-Side Demo & Offline AI Engine
-// Powers full interactive experience on Vercel without requiring a Python backend.
+// Supports dynamic switching between "Clean Slate (Empty Mode for Live Judge Demo)" and "60-Day Kirana Dataset".
 
 import {
   BrainOverview,
@@ -15,6 +15,45 @@ import {
   AgentEvent,
   Product,
 } from '../types';
+
+export type DataMode = 'demo' | 'empty';
+
+export function getDataMode(): DataMode {
+  return (localStorage.getItem('profitpilot_data_mode') as DataMode) || 'demo';
+}
+
+export function setDataMode(mode: DataMode) {
+  localStorage.setItem('profitpilot_data_mode', mode);
+  if (mode === 'empty') {
+    localStorage.setItem('profitpilot_custom_orders', JSON.stringify([]));
+    localStorage.setItem('profitpilot_custom_expenses', JSON.stringify([]));
+  }
+  window.dispatchEvent(new CustomEvent('profitpilot-data-changed', { detail: { mode } }));
+}
+
+function getCustomOrders(): any[] {
+  try {
+    return JSON.parse(localStorage.getItem('profitpilot_custom_orders') || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveCustomOrders(orders: any[]) {
+  localStorage.setItem('profitpilot_custom_orders', JSON.stringify(orders));
+}
+
+function getCustomExpenses(): any[] {
+  try {
+    return JSON.parse(localStorage.getItem('profitpilot_custom_expenses') || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveCustomExpenses(expenses: any[]) {
+  localStorage.setItem('profitpilot_custom_expenses', JSON.stringify(expenses));
+}
 
 export const MOCK_PRODUCTS: Product[] = [
   {
@@ -202,6 +241,36 @@ export const MOCK_PRODUCTS: Product[] = [
 ];
 
 export function getMockOverview(): BrainOverview {
+  const mode = getDataMode();
+  const customOrders = getCustomOrders();
+  const customExpenses = getCustomExpenses();
+
+  if (mode === 'empty') {
+    const liveRev = customOrders.reduce((sum: number, o: any) => sum + (o.total || 0), 0);
+    const liveProfit = customOrders.reduce((sum: number, o: any) => sum + (o.profit || (o.total || 0) * 0.2), 0);
+    const liveExp = customExpenses.reduce((sum: number, e: any) => sum + (e.amount || 0), 0);
+
+    return {
+      as_of: new Date().toISOString().split('T')[0],
+      health_score: customOrders.length ? 92 : 100,
+      score_breakdown: {
+        stock_availability: 25.0,
+        dead_stock: 25.0,
+        margin: 25.0,
+        expense_control: 25.0,
+      },
+      revenue_30d: liveRev,
+      gross_profit_30d: liveProfit,
+      margin_pct: liveRev > 0 ? Math.round((liveProfit / liveRev) * 1000) / 10 : 0.0,
+      expenses_30d: liveExp,
+      net_profit_30d: liveProfit - liveExp,
+      last_day_sales: liveRev,
+      inventory_value: 12500,
+      dead_stock_locked: 0,
+      products_at_risk: 0,
+    };
+  }
+
   return {
     as_of: new Date().toISOString().split('T')[0],
     health_score: 72,
@@ -224,6 +293,39 @@ export function getMockOverview(): BrainOverview {
 }
 
 export function getMockRecommendations(): BrainRecommendation[] {
+  const mode = getDataMode();
+  const customOrders = getCustomOrders();
+
+  if (mode === 'empty') {
+    if (customOrders.length === 0) {
+      return [
+        {
+          id: 1,
+          type: 'reorder',
+          urgency: 'low',
+          product_id: null,
+          title: 'Clean Slate Ready (Judge Live Demo Mode)',
+          detail: 'Dukaan me abhi koi purana data nahi hai. WhatsApp Agent ya Quick Entry me jakar live order ya kharcha create karke dikhayein!',
+          action: 'Create Live Order',
+          impact_rs: 0,
+        },
+      ];
+    }
+
+    return [
+      {
+        id: 1,
+        type: 'reorder',
+        urgency: 'medium',
+        product_id: 50,
+        title: 'Amul Milk: 1 order live processed',
+        detail: `Judge ke samne live create kiye gaye orders successfully ledger aur stock me reflect ho rahe hain!`,
+        action: 'View Ledger',
+        impact_rs: customOrders.reduce((sum: number, o: any) => sum + (o.total || 0), 0),
+      },
+    ];
+  }
+
   return [
     {
       id: 1,
@@ -299,6 +401,29 @@ export function getMockRecommendations(): BrainRecommendation[] {
 }
 
 export function getMockInventory(): BrainInventoryItem[] {
+  const mode = getDataMode();
+
+  if (mode === 'empty') {
+    return MOCK_PRODUCTS.slice(0, 6).map((p) => ({
+      product_id: p.id,
+      name: p.name,
+      category: p.category,
+      unit: p.unit,
+      cp: p.cost_price || p.price * 0.85,
+      sp: p.price,
+      stock: 50,
+      daily_demand: 0,
+      forecast_7d: 0,
+      days_left: 99.0,
+      days_since_last_sale: 0,
+      qty_30d: 0,
+      revenue_30d: 0,
+      profit_30d: 0,
+      margin_pct: 15.0,
+      locked_cash: 50 * (p.cost_price || p.price * 0.85),
+    }));
+  }
+
   return [
     {
       product_id: 42,
@@ -520,6 +645,32 @@ export function getMockInventory(): BrainInventoryItem[] {
 }
 
 export function getMockFinance(): BrainFinance {
+  const mode = getDataMode();
+  const customOrders = getCustomOrders();
+  const customExpenses = getCustomExpenses();
+
+  if (mode === 'empty') {
+    const liveRev = customOrders.reduce((sum: number, o: any) => sum + (o.total || 0), 0);
+    const liveProfit = customOrders.reduce((sum: number, o: any) => sum + (o.profit || (o.total || 0) * 0.2), 0);
+    const liveExp = customExpenses.reduce((sum: number, e: any) => sum + (e.amount || 0), 0);
+
+    return {
+      weekly: [
+        {
+          week_ending: new Date().toISOString().split('T')[0],
+          revenue: liveRev,
+          gross_profit: liveProfit,
+          expenses: liveExp,
+          net: liveProfit - liveExp,
+        },
+      ],
+      expense_by_category_30d: customExpenses.reduce((acc: any, e: any) => {
+        acc[e.category] = (acc[e.category] || 0) + e.amount;
+        return acc;
+      }, {}),
+    };
+  }
+
   return {
     weekly: [
       { week_ending: '2026-09-10', revenue: 70469, gross_profit: 8480, expenses: 3491, net: 4989 },
@@ -543,6 +694,27 @@ export function getMockFinance(): BrainFinance {
 }
 
 export function getMockExpenses(): BrainExpenseInsight[] {
+  const mode = getDataMode();
+  if (mode === 'empty') {
+    const customExpenses = getCustomExpenses();
+    return [
+      {
+        category: 'wastage',
+        last_7d: customExpenses.filter((e) => e.category === 'wastage').reduce((s, e) => s + e.amount, 0),
+        normal_weekly: 0,
+        ratio: 1.0,
+        anomaly: false,
+      },
+      {
+        category: 'electricity',
+        last_7d: customExpenses.filter((e) => e.category === 'electricity').reduce((s, e) => s + e.amount, 0),
+        normal_weekly: 0,
+        ratio: 1.0,
+        anomaly: false,
+      },
+    ];
+  }
+
   return [
     { category: 'wastage', last_7d: 1880.0, normal_weekly: 212.5, ratio: 8.85, anomaly: true },
     { category: 'transport', last_7d: 1225.0, normal_weekly: 756.25, ratio: 1.62, anomaly: true },
@@ -554,6 +726,16 @@ export function getMockExpenses(): BrainExpenseInsight[] {
 }
 
 export function getMockBacktest(days: number = 7): BrainBacktest {
+  const mode = getDataMode();
+  if (mode === 'empty') {
+    return {
+      window_days: days,
+      predicted_units: 0,
+      actual_units: 0,
+      accuracy_pct: 95.0,
+    };
+  }
+
   return {
     window_days: days,
     predicted_units: 1017,
@@ -563,7 +745,24 @@ export function getMockBacktest(days: number = 7): BrainBacktest {
 }
 
 export function getMockSummary(): { text: string } {
+  const mode = getDataMode();
   const todayStr = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+  if (mode === 'empty') {
+    const customOrders = getCustomOrders();
+    return {
+      text: `🚀 ProfitPilot Executive Briefing — ${todayStr}
+Mode: 🌟 Fresh Store (Clean Slate for Live Judge Demo)
+Orders Processed Live: ${customOrders.length}
+
+Presentation Tip:
+Judges ke samne real-time demonstration ke liye:
+1. WhatsApp Order Agent me jakar "2 packet bread aur 1 milk" likhein.
+2. Quick Entry me "500 rs bijli bill" bole ya likhein.
+3. Dekhein kaise AI instant inventory deduct karke profit margin calculate karta hai!`,
+    };
+  }
+
   return {
     text: `🚀 ProfitPilot Executive Briefing — ${todayStr}
 Health Score: 72/100 (Optimal Performance)
@@ -577,6 +776,35 @@ Aaj ke top 3 priority decisions:
 }
 
 export function getMockDashboardStats(): DashboardStats {
+  const mode = getDataMode();
+  const customOrders = getCustomOrders();
+
+  if (mode === 'empty') {
+    const liveRev = customOrders.reduce((sum: number, o: any) => sum + (o.total || 0), 0);
+    const liveProfit = customOrders.reduce((sum: number, o: any) => sum + (o.profit || (o.total || 0) * 0.2), 0);
+
+    return {
+      today_orders: customOrders.length,
+      today_revenue: liveRev,
+      today_profit: liveProfit,
+      today_margin_pct: liveRev > 0 ? Math.round((liveProfit / liveRev) * 1000) / 10 : 0.0,
+      week_orders: customOrders.length,
+      week_revenue: liveRev,
+      week_profit: liveProfit,
+      week_margin_pct: liveRev > 0 ? Math.round((liveProfit / liveRev) * 1000) / 10 : 0.0,
+      month_orders: customOrders.length,
+      month_revenue: liveRev,
+      month_profit: liveProfit,
+      month_margin_pct: liveRev > 0 ? Math.round((liveProfit / liveRev) * 1000) / 10 : 0.0,
+      low_stock_count: 0,
+      pending_deliveries: customOrders.filter((o: any) => o.status === 'out_for_delivery').length,
+      total_products: 13,
+      total_customers: customOrders.length > 0 ? 1 : 0,
+      inventory_value: 12500,
+      potential_profit: 2500,
+    };
+  }
+
   return {
     today_orders: 14,
     today_revenue: 5420.0,
@@ -600,6 +828,25 @@ export function getMockDashboardStats(): DashboardStats {
 }
 
 export function getMockCustomers(): CustomerWithStats[] {
+  const mode = getDataMode();
+  const customOrders = getCustomOrders();
+
+  if (mode === 'empty') {
+    if (customOrders.length === 0) return [];
+    return [
+      {
+        id: 1,
+        name: 'Rahul Sharma',
+        phone: '9876543210',
+        address: 'Flat 402, Royal Palms Apartment, Sector 62, Noida',
+        created_at: new Date().toISOString(),
+        order_count: customOrders.length,
+        total_spent: customOrders.reduce((s: number, o: any) => s + (o.total || 0), 0),
+        last_order_at: new Date().toISOString(),
+      },
+    ];
+  }
+
   return [
     {
       id: 1,
@@ -655,6 +902,20 @@ export function getMockCustomers(): CustomerWithStats[] {
 }
 
 export function getMockOrders(): OrderBrief[] {
+  const mode = getDataMode();
+  const customOrders = getCustomOrders();
+
+  if (mode === 'empty') {
+    return customOrders.map((o: any) => ({
+      id: o.order_id,
+      customer_name: o.customer_name,
+      item_count: o.items?.length || 2,
+      total: o.total,
+      status: o.status || 'out_for_delivery',
+      created_at: o.created_at || new Date().toISOString(),
+    }));
+  }
+
   return [
     {
       id: 1024,
@@ -700,6 +961,15 @@ export function getMockOrders(): OrderBrief[] {
 }
 
 export function getMockAgentEvents(): AgentEvent[] {
+  const mode = getDataMode();
+  const customOrders = getCustomOrders();
+
+  if (mode === 'empty') {
+    if (customOrders.length === 0) return [];
+    const latest = customOrders[0];
+    return latest.agent_events || [];
+  }
+
   return [
     {
       id: 1,
@@ -966,6 +1236,7 @@ export function mockProcessCustomerRequest(
   const subtotal = items.reduce((sum, item) => sum + item.total_price, 0);
   const delivery_fee = 30.0;
   const total = subtotal + delivery_fee;
+  const profit = subtotal * 0.22;
   const orderId = Math.floor(1000 + Math.random() * 9000);
 
   const customerName = 'Rahul Sharma';
@@ -977,7 +1248,7 @@ export function mockProcessCustomerRequest(
 
   const confirmEn = `Hello ${customerName}! Your order #${orderId} from ProfitPilot Hub is confirmed:\n\n${itemListText}\n\nDelivery Fee: ₹${delivery_fee}\nTotal: ₹${total}\nEstimated Delivery: 15-20 mins.`;
 
-  return {
+  const result: OrderResult = {
     success: true,
     order_id: orderId,
     order_display_id: `ORD-${orderId}`,
@@ -1069,6 +1340,25 @@ export function mockProcessCustomerRequest(
       delivery_person_phone: '+91 98765 43219',
     },
   };
+
+  // Persist order in customOrders so live presentation updates everywhere!
+  const customOrders = getCustomOrders();
+  customOrders.unshift({
+    order_id: orderId,
+    customer_name: customerName,
+    items,
+    subtotal,
+    delivery_fee,
+    total,
+    profit,
+    status: 'out_for_delivery',
+    created_at: new Date().toISOString(),
+    agent_events: result.agent_events,
+  });
+  saveCustomOrders(customOrders);
+  window.dispatchEvent(new CustomEvent('profitpilot-data-changed', { detail: { order: result } }));
+
+  return result;
 }
 
 export function mockSubmitQuickEntry(text: string): { ok: boolean; type?: string; message: string } {
@@ -1076,17 +1366,35 @@ export function mockSubmitQuickEntry(text: string): { ok: boolean; type?: string
 
   // Expense
   if (/bijli|electricity|light|kiraya|rent|salary|tankhwah|bhada|auto|transport|kharab|waste|misc|chai/i.test(t)) {
-    const num = t.match(/\d+/)?.[0] || '500';
+    const num = parseInt(t.match(/\d+/)?.[0] || '500', 10);
+    const cat = /bijli|electricity|light/i.test(t)
+      ? 'electricity'
+      : /rent|kiraya/i.test(t)
+      ? 'rent'
+      : /salary|tankhwah/i.test(t)
+      ? 'salary'
+      : /bhada|auto|transport/i.test(t)
+      ? 'transport'
+      : /kharab|waste/i.test(t)
+      ? 'wastage'
+      : 'misc';
+
+    const customExpenses = getCustomExpenses();
+    customExpenses.unshift({ category: cat, amount: num, date: new Date().toISOString().split('T')[0], note: text });
+    saveCustomExpenses(customExpenses);
+    window.dispatchEvent(new CustomEvent('profitpilot-data-changed'));
+
     return {
       ok: true,
       type: 'expense',
-      message: `✅ ₹${num} ka kharcha ProfitPilot ledger me record ho gaya!`,
+      message: `✅ ₹${num} ka (${cat}) kharcha ProfitPilot ledger me record ho gaya!`,
     };
   }
 
   // Restock
   if (/aaya|aaye|mangaya|restock|khareeda|stock/i.test(t)) {
     const num = t.match(/\d+/)?.[0] || '10';
+    window.dispatchEvent(new CustomEvent('profitpilot-data-changed'));
     return {
       ok: true,
       type: 'restock',
@@ -1096,11 +1404,25 @@ export function mockSubmitQuickEntry(text: string): { ok: boolean; type?: string
 
   // Sale
   if (/becha|bech|bika|sale|sold/i.test(t)) {
-    const num = t.match(/\d+/)?.[0] || '2';
+    const num = parseInt(t.match(/\d+/)?.[0] || '2', 10);
+    const customOrders = getCustomOrders();
+    customOrders.unshift({
+      order_id: Math.floor(1000 + Math.random() * 9000),
+      customer_name: 'Counter Customer',
+      items: [{ product_name: text, quantity: num, unit_price: 45, total_price: num * 45 }],
+      subtotal: num * 45,
+      delivery_fee: 0,
+      total: num * 45,
+      profit: num * 10,
+      status: 'delivered',
+      created_at: new Date().toISOString(),
+    });
+    saveCustomOrders(customOrders);
+    window.dispatchEvent(new CustomEvent('profitpilot-data-changed'));
     return {
       ok: true,
       type: 'sale',
-      message: `✅ ${num} units bikri record ho gayi aur stock deduct ho gaya!`,
+      message: `✅ ${num} units bikri (₹${num * 45}) record ho gayi aur ledger update ho gaya!`,
     };
   }
 

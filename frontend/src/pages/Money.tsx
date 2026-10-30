@@ -10,6 +10,9 @@ export default function Money() {
 
   useEffect(() => {
     loadFinance();
+    const onDataChanged = () => loadFinance();
+    window.addEventListener('profitpilot-data-changed', onDataChanged);
+    return () => window.removeEventListener('profitpilot-data-changed', onDataChanged);
   }, []);
 
   const loadFinance = async () => {

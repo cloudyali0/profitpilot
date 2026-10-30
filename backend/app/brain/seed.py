@@ -81,3 +81,9 @@ def build(days=60):
             exp.append((d.isoformat(), "misc", int(rng.integers(50, 150)), "Miscellaneous store expense"))
     db.insert_df("expenses", pd.DataFrame(exp, columns=["date", "category", "amount", "note"]))
     return {"products": len(prod), "sales_rows": len(rows), "expense_rows": len(exp)}
+
+
+def clear():
+    db.wipe()
+    return {"status": "cleared", "products": 0, "sales_rows": 0, "expense_rows": 0}
+

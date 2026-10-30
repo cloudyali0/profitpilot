@@ -15,6 +15,9 @@ export default function StockBrain() {
 
   useEffect(() => {
     loadInventory();
+    const onDataChanged = () => loadInventory();
+    window.addEventListener('profitpilot-data-changed', onDataChanged);
+    return () => window.removeEventListener('profitpilot-data-changed', onDataChanged);
   }, []);
 
   const loadInventory = async () => {

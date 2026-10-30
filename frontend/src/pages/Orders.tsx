@@ -10,11 +10,17 @@ export default function Orders() {
   const [selectedOrder, setSelectedOrder] = useState<OrderDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
 
-  useEffect(() => {
+  const loadOrders = () => {
     getOrders()
       .then((data: any) => setOrders(data))
       .catch(() => {})
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    loadOrders();
+    window.addEventListener('profitpilot-data-changed', loadOrders);
+    return () => window.removeEventListener('profitpilot-data-changed', loadOrders);
   }, []);
 
   const openOrder = async (orderId: number) => {

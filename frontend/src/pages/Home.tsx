@@ -6,6 +6,7 @@ import {
   getBrainBacktest,
   getBrainSummary,
   resetBrainSeed,
+  clearBrainData,
 } from '../services/api';
 import { BrainOverview, BrainRecommendation, BrainBacktest } from '../types';
 
@@ -41,7 +42,25 @@ export default function Home() {
 
   useEffect(() => {
     loadData();
+    const onDataChanged = () => loadData();
+    window.addEventListener('profitpilot-data-changed', onDataChanged);
+    return () => window.removeEventListener('profitpilot-data-changed', onDataChanged);
   }, []);
+
+  const handleClearData = async () => {
+    if (!window.confirm('Wipe store data clean for live judge demonstration?')) return;
+    setResetting(true);
+    try {
+      await clearBrainData();
+      await loadData();
+      setActionSuccess('🗑️ Store data wiped clean! You can now demonstrate live WhatsApp orders from scratch.');
+      setTimeout(() => setActionSuccess(null), 5000);
+    } catch (err) {
+      alert('Failed: ' + err);
+    } finally {
+      setResetting(false);
+    }
+  };
 
   const handleAction = (rec: BrainRecommendation) => {
     if (rec.type === 'reorder') {
@@ -135,11 +154,21 @@ export default function Home() {
           )}
           <button
             className="btn btn-secondary"
+            onClick={handleClearData}
+            disabled={resetting}
+            style={{ fontSize: '0.8rem', padding: '6px 12px', borderColor: '#FCA5A5', color: '#B91C1C' }}
+            title="Clear store to clean slate for live judge demonstration"
+          >
+            🗑️ Clear Data (Live Demo)
+          </button>
+          <button
+            className="btn btn-primary"
             onClick={handleResetData}
             disabled={resetting}
             style={{ fontSize: '0.8rem', padding: '6px 12px' }}
+            title="Load complete 60-day Kirana simulation dataset"
           >
-            {resetting ? 'Resetting...' : '🔄 Reset Demo (60d)'}
+            {resetting ? 'Loading...' : '⚡ Load 60D Demo Data'}
           </button>
         </div>
       </div>

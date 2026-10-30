@@ -86,6 +86,12 @@ def reset_seed():
     return seed.build()
 
 
+@router.post("/seed/clear")
+def clear_seed():
+    """Wipe database clean for live judge demonstration."""
+    return seed.clear()
+
+
 @router.post("/upload/{kind}")
 async def upload_csv(kind: str, file: UploadFile = File(...)):
     """Upload CSV data: 'products', 'sales', or 'expenses'."""

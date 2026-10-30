@@ -17,7 +17,11 @@ import {
   mockBrainChat,
   mockProcessCustomerRequest,
   mockSubmitQuickEntry,
+  getDataMode,
+  setDataMode,
 } from './mockData';
+
+export { getDataMode, setDataMode };
 
 const API_BASE = (((import.meta as any).env?.VITE_API_BASE_URL as string) || '/api').replace(/\/+$/, '');
 
@@ -383,7 +387,13 @@ export async function submitQuickEntry(text: string) {
   );
 }
 
+export async function clearBrainData() {
+  setDataMode('empty');
+  return safeRequest('/seed/clear', () => ({ ok: true, message: 'Store data cleared to clean slate for live demo!' }), { method: 'POST' });
+}
+
 export async function resetBrainSeed() {
+  setDataMode('demo');
   return safeRequest('/seed/reset', () => ({ ok: true, message: 'Simulation database reloaded!' }), { method: 'POST' });
 }
 

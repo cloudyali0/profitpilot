@@ -99,13 +99,19 @@ export default function Dashboard() {
     setDispatching(false);
   };
 
-  useEffect(() => {
+  const loadDashboardData = () => {
     getDashboardStats()
       .then((d: any) => setStats(d))
       .catch(() => {});
     getNeighborhoodPulse()
       .then(setPulse)
       .catch(() => {});
+  };
+
+  useEffect(() => {
+    loadDashboardData();
+    window.addEventListener('profitpilot-data-changed', loadDashboardData);
+    return () => window.removeEventListener('profitpilot-data-changed', loadDashboardData);
   }, [result]);
 
   // Animate agent events appearing one by one
